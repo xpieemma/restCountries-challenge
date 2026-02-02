@@ -133,7 +133,7 @@ function provideCountries(countries){
     });
     DOM.countriesGrid.appendChild(fragment);
 
-    document.querySelector('.lazy').forEach(img => imageControl.observe(img));
+    document.querySelectorAll('.lazy').forEach(img => imageControl.observe(img));
 }
 
 
