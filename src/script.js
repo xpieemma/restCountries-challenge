@@ -153,6 +153,18 @@ function filterCountries() {
     });
     provideCountries(ETAT.specificCountries);
 }
+function countryDetails(country){
+    ETAT.currentView = 'detail';
+    ETAT.currentCountry = country;
+
+    console.log("Showing details for: ", getCountryName(country));
+
+    DOM.homeView.classList.add('hidden');
+    DOM.detailView.classList.remove('hidden');
+    window.scrollTo(0, 0);
+}
+
+
 
 
 
