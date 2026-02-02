@@ -11,7 +11,7 @@ const DOM = {
 };
 
 const _ = {
-  URL: "https://restcountries.com/v3.1/all",
+  URL: "https://restcountries.com/v3.1/all?fields=name,flags,population,region,capital",
   DELAY: 300,
   DELAY_INCREMENT: 50,
   MAX_DELAY: 1000,
@@ -64,5 +64,25 @@ function eventListen(){
         }
     });
 }
+
+async function fetchCountry(){
+    try {
+        const response = await fetch(_.URL);
+        if(!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const donnee = await response.json();
+
+        ETAT.countries = donnee.sort((x, y) => 
+        getCountryName(x).localeCompare(getCountryName(y)));
+        ETAT.specificCountries = ETAT.countries;
+
+        console.log('Countries loaded', ETAT.countries.length);
+
+    } catch (err){
+        DOM.countriesGrid.innerHTML = `<p class = "col-span-full py-12 text-center text-red-500 font-medium"> Error: ${err.message}</p>`;
+    }
+}
+
+
  initTheme();
  eventListen();
+ fetchCountry();
