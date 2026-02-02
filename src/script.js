@@ -164,7 +164,11 @@ function countryDetails(country){
     window.scrollTo(0, 0);
 }
 
-
+function homeViews() {
+    ETAT.currentView = 'home';
+    ETAT.currentCountry = null;
+    DOM.homeView.classList.remove('hidden');
+}
 
 
 
