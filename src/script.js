@@ -118,6 +118,8 @@ function createCountryCard(country, i){
             <p class="mb-1"><strong class="font-semibold text-gray-900 dark:text-white">Region:</strong> ${country.region}</p>
             <p><strong class="font-semibold text-gray-900 dark:text-white">Capital:</strong> ${capital}</p>
         </div>`;
+
+        card.addEventListener('click', () => countryDetails(country));
         return card;
 }
 
