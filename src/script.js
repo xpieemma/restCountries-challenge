@@ -136,6 +136,16 @@ function provideCountries(countries){
     document.querySelectorAll('.lazy').forEach(img => imageControl.observe(img));
 }
 
+function filterCountries() {
+    const searching = DOM.searchInput.toLowerCase().trim();
+    const regions = DOM.regionFilter.value;
+    ETAT.specificCountries = ETAT.countries.filter(country => {
+        const searchingMatch = getCountryName(country).toLowerCase().includes(searching);
+        const regionMatch = regions === 'all' || country.region === regions;
+        return searchingMatch && regionMatch;
+    });
+    provideCountries(ETAT.specificCountries);
+}
 
 
 
