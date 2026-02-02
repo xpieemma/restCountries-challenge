@@ -52,3 +52,16 @@ function initTheme(){
     }
 }
 
+function eventListen(){
+    DOM.themeToggle.addEventListener('click', () => {
+        if (document.documentElement.classList.contains('dark')){
+            document.documentElement.classList.remote('dark');
+            localStorage.setItem('them', 'light');
+        } else {
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+
+        }
+    });
+}
+
