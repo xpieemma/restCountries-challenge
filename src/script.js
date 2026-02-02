@@ -14,5 +14,33 @@ const DOM = {
 
 };
 
+const _= {
+URL: 'https://restcountries.com/v3.1/all',
+DELAY: 300,
+DELAY_INCREMENT: 50,
+MAX_DELAY: 1000
+};
+//country?.name?.common : if country exist and has name property
+const getCountryName = (country) => country?.name?.common || country?.name || 'Unknown';
+
+const imageControl = new IntersectionObserver((entries) => { 
+    entries.forEach(entry =>{
+    if (entry.isIntersecting){
+        const img = entry.target;
+        img.src = img.dataset.src;
+        img.onload = () => img.classList.remove('opacity-0');
+        imageControl.unobserve(img);
+    }
+});
+}, {rootMargin: '50px'});
+
+const ETAT = {
+    countries: [],
+    specificCountries: [],
+    currentView: 'home',
+    currentCountry: null
+};
+
+
 
 
