@@ -63,6 +63,13 @@ function eventListen(){
 
         }
     });
+
+    let timeout;
+    DOM.searchInput.addEventListener('input', () =>{
+        clearTimeout(timeout);
+        timeout = setTimeout(filterCountries, _.DELAY);
+    });
+    DOM.regionFilter.addEventListener('change', filterCountries);
 }
 
 async function fetchCountry(){
@@ -137,7 +144,7 @@ function provideCountries(countries){
 }
 
 function filterCountries() {
-    const searching = DOM.searchInput.toLowerCase().trim();
+    const searching = DOM.searchInput.value.toLowerCase().trim();
     const regions = DOM.regionFilter.value;
     ETAT.specificCountries = ETAT.countries.filter(country => {
         const searchingMatch = getCountryName(country).toLowerCase().includes(searching);
