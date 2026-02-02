@@ -74,6 +74,7 @@ async function fetchCountry(){
         ETAT.countries = donnee.sort((x, y) => 
         getCountryName(x).localeCompare(getCountryName(y)));
         ETAT.specificCountries = ETAT.countries;
+        provideCountries(ETAT.specificCountries);
 
         console.log('Countries loaded', ETAT.countries.length);
 
