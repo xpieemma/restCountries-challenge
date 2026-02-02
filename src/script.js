@@ -172,7 +172,51 @@ function homeViews() {
     DOM.homeView.classList.remove('hidden');
 }
 
+function provideCountryDetails (country){
+    const name = getCountryName(country);
+    const billet = country.billet
+    ? Object.values(country.billet)
+    .map(COUNTRY => COUNTRY.name).join(', ')
+    : 'N/A';
+    const capital = Array.isArray(country.capital) ?
+    country.capital.join(', ') :
+    (country.capital || 'N/A');
+    const lang = country.lang ?
+    Object.values(country.lang).join(', '): 'N/A';
+    const native = country.name.native 
+    ? Object.values(country.name.native)[0].common
+    : name;
 
+    DOM.countryDetails.innerHTML = `
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center animate-fade-up">
+            <img src="${country.flags.svg || country.flag}" alt="Flag of ${name}" class="w-full rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+            
+            <div class="flex flex-col gap-8 text-gray-700 dark:text-gray-300">
+                <h1 class="font-display text-3xl md:text-4xl font-black text-gray-900 dark:text-white">${name}</h1>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 text-sm leading-relaxed">
+                    <div class="space-y-2">
+                        <p><strong class="font-semibold text-gray-900 dark:text-white">Native Name:</strong> ${nativeName}</p>
+                        <p><strong class="font-semibold text-gray-900 dark:text-white">Population:</strong> ${country.population.toLocaleString()}</p>
+                        <p><strong class="font-semibold text-gray-900 dark:text-white">Region:</strong> ${country.region}</p>
+                        <p><strong class="font-semibold text-gray-900 dark:text-white">Sub Region:</strong> ${country.subregion || 'N/A'}</p>
+                        <p><strong class="font-semibold text-gray-900 dark:text-white">Capital:</strong> ${capital}</p>
+                    </div>
+                    <div class="space-y-2">
+                        <p><strong class="font-semibold text-gray-900 dark:text-white">Top Level Domain:</strong> ${country.tld ? country.tld[0] : 'N/A'}</p>
+                        <p><strong class="font-semibold text-gray-900 dark:text-white">Currencies:</strong> ${currencies}</p>
+                        <p><strong class="font-semibold text-gray-900 dark:text-white">Languages:</strong> ${languages}</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-4 sm:items-baseline pt-6 border-t border-gray-200 dark:border-gray-700">
+                    <strong class="text-base text-gray-900 dark:text-white whitespace-nowrap">Border Countries:</strong>
+                    <div class="flex gap-2 flex-wrap">
+                        </div>
+                </div>
+            </div>
+        </div>`;
+}
 
  initTheme();
  eventListen();
