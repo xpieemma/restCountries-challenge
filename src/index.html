@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="scroll-smoth">
+<html lang="en" class="scroll-smooth">
 
 <head>
     <meta charset="UTF-8" />
@@ -8,8 +8,7 @@
     <meta name="description" content="Detailed information about Countries" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;600;800&family=DM+Sans:wght@400;500;700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,600;9..144,800&family=DM+Sans:wght@400;500;700&display=swap" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -29,11 +28,12 @@
                     animation: {
                         "spin-slow": "spin 20s linear infinite",
                         "fade-up": "fadeInUp .6s ease-out forwards",
+                         "globe-spin": "spin 6s linear infinite"
                     },
-                    keyframe: {
+                    keyframes: {
                         fadeInUp: {
                             "0%": {
-                                opicity: "0",
+                                opacity: "0",
                                 transform: "translateY(20px)",
                             },
                             "100%": {
@@ -51,7 +51,7 @@
 <body
     class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-white font-body min-h-screen flex flex-col transition-colors duration-300">
     <a href="#main-content"
-        class="sr-only focus:not sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-blue-600 focus: text-white">Skip
+        class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-blue-600 focus:text-white">Skip
         to main content</a>
     <header
         class="sticky top-0 z-50 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 py-6 transition-all duration-300 shadow-sm">
@@ -64,8 +64,8 @@
                 </h1>
                 <button id="theme-toggle"
                     class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all bg-gray-100 text-gray-800 border border-gray-200 hover:bg-gray-200 dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:hover:bg-gray-600 active:scale-95 group">
-                    <span class="transition-transform group-hover:rotate-12" aria-hidden="true">🌑</span>
-                    <span class="theme-label hidden sm:inline">Dark Mode</span>
+                    <span id="theme-icon" class="transition-transform group-hover:rotate-12" aria-hidden="true">🌑</span>
+                    <span id="theme-label" class="theme-label hidden sm:inline">Dark Mode</span>
                 </button>
             </div>
         </div>
@@ -92,6 +92,7 @@
                             aria-label="Filter by region">
                             <option value="all">Filter by Region</option>
                             <option value="Africa">Africa</option>
+                            <option value="all">All</option>
                             <option value="Americas">Americas</option>
                             <option value="Asia">Asia</option>
                             <option value="Europe">Europe</option>

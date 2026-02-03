@@ -8,11 +8,13 @@ const DOM = {
   countryDetails: document.getElementById("country-details"),
   backButton: document.getElementById("back-button"),
   appTitle: document.getElementById("app-title"),
+  themeIcon: document.getElementById("theme-icon"),
+  themeLabel: document.getElementById("theme-label"),
 };
-
 
 const _ = {
   URL: "https://restcountries.com/v3.1/all?fields=name,flags,population,region,capital,cca3,borders,subregion,currencies,languages",
+//   url: `https://restcountries.com/v3.1/alpha/${code}?fields=name,flags,population,region,subregion,capital,cca3,borders,tld,currencies,languages,maps,timezones,fifa,latlng,idd,coatOfArms`,
   DELAY: 300,
   DELAY_INCREMENT: 50,
   MAX_DELAY: 1000,
@@ -48,9 +50,17 @@ function initTheme() {
 
   if (savedTheme === "dark" || (!savedTheme && darkTheme)) {
     document.documentElement.classList.add("dark");
-  } else {
+ } else {
     document.documentElement.classList.remove("dark");
   }
+  syncThemeButton();
+
+}
+
+function syncThemeButton() {
+  const isDark = document.documentElement.classList.contains("dark");
+  DOM.themeIcon.textContent = isDark ? "🌕" : "🌑";
+  DOM.themeLabel.textContent = isDark ? "Light Mode" : "Dark Mode";
 }
 
 function eventListen() {
@@ -62,7 +72,9 @@ function eventListen() {
       document.documentElement.classList.add("dark");
       localStorage.setItem("theme", "dark");
     }
+    syncThemeButton();
   });
+  
 
   let timeout;
   DOM.searchInput.addEventListener("input", () => {
@@ -80,19 +92,19 @@ function eventListen() {
     }
   });
 
-  DOM.backButton.addEventListener('click', () => {
-    window.history.pushState({view: 'home'}, '', '#');
+  DOM.backButton.addEventListener("click", () => {
+    window.history.pushState({ view: "home" }, "", "#");
     homeViews();
   });
 
-  DOM.appTitle.addEventListener('click', () => {
-    DOM.searchInput.value = '';
-    DOM.regionFilter.value = 'all';
+  DOM.appTitle.addEventListener("click", () => {
+    DOM.searchInput.value = "";
+    DOM.regionFilter.value = "all";
     ETAT.filterCountries = ETAT.countries;
     provideCountries(ETAT.specificCountries);
-    window.history.pushState({view: 'home'}, '','#/')
+    window.history.pushState({ view: "home" }, "", "#/");
     homeViews();
-  }):
+  });
 }
 
 async function fetchCountry() {
@@ -109,10 +121,10 @@ async function fetchCountry() {
 
     const hash = window.location.hash.slice(1);
     if (hash) {
-        const country = ETAT.countries.find( c => c.cca3 === hash);
-        if (country){
-            countryDetails(country);
-        }
+      const country = ETAT.countries.find((c) => c.cca3 === hash);
+      if (country) {
+        countryDetails(country);
+      }
     }
 
     console.log("Countries loaded", ETAT.countries.length);
@@ -189,9 +201,15 @@ function filterCountries() {
   });
   provideCountries(ETAT.specificCountries);
 }
-function countryDetails(country) {
-  ETAT.currentView = "detail";
-  ETAT.currentCountry = country;
+async function countryDetails(country) {
+const code = country.cca3;
+    const res = await fetch(`https://restcountries.com/v3.1/alpha/${code}?fields=name,flags,population,region,subregion,capital,cca3,borders,tld,currencies,languages,maps,timezones,fifa,latlng,idd,coatOfArms`);
+    const data = await res.json();
+    const fullData = Array.isArray(data) ? data[0] : data;
+    ETAT.currentCountry = fullData;
+
+//   ETAT.currentView = "detail";
+//   ETAT.currentCountry = country;
 
   // console.log("Showing details for: ", getCountryName(country));
 
@@ -201,8 +219,8 @@ function countryDetails(country) {
   DOM.detailView.classList.remove("hidden");
   window.scrollTo(0, 0);
 
-  const code = country.cca3;
-  window.history.pushState({view: 'detail', code: code}, '', `#${code}`);
+  
+  window.history.pushState({ view: "detail", code: code }, "", `#${code}`);
 }
 
 function homeViews() {
@@ -278,18 +296,18 @@ function provideBorderButtons(borders) {
     .join(" ");
 }
 
-function popState(evnt){
-    if (evnt.state?.view === 'detail'){
-        const country = ETAT.countries.find(c => c.cca3 === evnt.state.code);
-        if (country){
-            countryDetails(country);
-        }
-    } else {
-        homeViews();
+function popState(evnt) {
+  if (evnt.state?.view === "detail") {
+    const country = ETAT.countries.find((c) => c.cca3 === evnt.state.code);
+    if (country) {
+      countryDetails(country);
     }
+  } else {
+    homeViews();
+  }
 }
 
 initTheme();
 eventListen();
 fetchCountry();
-window.addEventListener('popstate', popState);
+window.addEventListener("popstate", popState);
