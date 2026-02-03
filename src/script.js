@@ -214,7 +214,7 @@ function provideCountryDetails (country){
                 <div class="flex flex-col sm:flex-row gap-4 sm:items-baseline pt-6 border-t border-gray-200 dark:border-gray-700">
                     <strong class="text-base text-gray-900 dark:text-white whitespace-nowrap">Border Countries:</strong>
                     <div class="flex gap-2 flex-wrap">
-                        </div>
+                       ${provideBorderButtons(country.borders)} </div>
                 </div>
             </div>
         </div>`;
