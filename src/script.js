@@ -159,7 +159,9 @@ function countryDetails(country){
     ETAT.currentView = 'detail';
     ETAT.currentCountry = country;
 
-    console.log("Showing details for: ", getCountryName(country));
+    // console.log("Showing details for: ", getCountryName(country));
+
+    provideCountryDetails(country);
 
     DOM.homeView.classList.add('hidden');
     DOM.detailView.classList.remove('hidden');
@@ -174,17 +176,17 @@ function homeViews() {
 
 function provideCountryDetails (country){
     const name = getCountryName(country);
-    const billet = country.billet
-    ? Object.values(country.billet)
+    const currencies = country.currencies
+    ? Object.values(country.currencies)
     .map(COUNTRY => COUNTRY.name).join(', ')
     : 'N/A';
     const capital = Array.isArray(country.capital) ?
     country.capital.join(', ') :
     (country.capital || 'N/A');
-    const lang = country.lang ?
-    Object.values(country.lang).join(', '): 'N/A';
-    const native = country.name.native 
-    ? Object.values(country.name.native)[0].common
+    const languages = country.languages ?
+    Object.values(country.languages).join(', '): 'N/A';
+    const nativeName = country.name.nativeName 
+    ? Object.values(country.name.nativeName)[0].common
     : name;
 
     DOM.countryDetails.innerHTML = `
@@ -216,6 +218,25 @@ function provideCountryDetails (country){
                 </div>
             </div>
         </div>`;
+}
+function provideBorderButtons(borders){
+    if (!borders || borders.length === 0) return 
+    '<span class="text-gray-400 italic"> No shared borders </span>';
+    return borders.map( d => {
+        const borderCountry = ETAT.countries.
+        find(c => (d.cca3 === d || d.alpha3Code === d));
+        const label = borderCountry ? getCountryName(borderCountry)
+        : d;
+
+        return borderCountry ?
+        `<button class="border-button px-4 py-1.5 text-xs rounded shadow-sm transition-all
+                 bg-white border border-gray-200 text-gray-700
+                 hover:-translate-y-0.5 hover:shadow-md hover:bg-gray-50
+                 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700" 
+                 data-code="${d}">${label}</button>`
+                 : '';
+
+    }).join(' ');
 }
 
  initTheme();
