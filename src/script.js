@@ -10,8 +10,9 @@ const DOM = {
   appTitle: document.getElementById("app-title"),
 };
 
+
 const _ = {
-  URL: "https://restcountries.com/v3.1/all?fields=name,flags,population,region,capital,cca3,borders,tld,currencies,languages",
+  URL: "https://restcountries.com/v3.1/all?fields=name,flags,population,region,capital,cca3,borders,subregion,currencies,languages",
   DELAY: 300,
   DELAY_INCREMENT: 50,
   MAX_DELAY: 1000,
