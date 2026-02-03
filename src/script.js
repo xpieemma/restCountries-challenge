@@ -14,7 +14,7 @@ const DOM = {
 
 const _ = {
   URL: "https://restcountries.com/v3.1/all?fields=name,flags,population,region,capital,cca3,borders,subregion,currencies,languages",
-//   url: `https://restcountries.com/v3.1/alpha/${code}?fields=name,flags,population,region,subregion,capital,cca3,borders,tld,currencies,languages,maps,timezones,fifa,latlng,idd,coatOfArms`,
+  //   url: `https://restcountries.com/v3.1/alpha/${code}?fields=name,flags,population,region,subregion,capital,cca3,borders,tld,currencies,languages,maps,timezones,fifa,latlng,idd,coatOfArms`,
   DELAY: 300,
   DELAY_INCREMENT: 50,
   MAX_DELAY: 1000,
@@ -50,11 +50,10 @@ function initTheme() {
 
   if (savedTheme === "dark" || (!savedTheme && darkTheme)) {
     document.documentElement.classList.add("dark");
- } else {
+  } else {
     document.documentElement.classList.remove("dark");
   }
   syncThemeButton();
-
 }
 
 function syncThemeButton() {
@@ -74,7 +73,6 @@ function eventListen() {
     }
     syncThemeButton();
   });
-  
 
   let timeout;
   DOM.searchInput.addEventListener("input", () => {
@@ -202,24 +200,25 @@ function filterCountries() {
   provideCountries(ETAT.specificCountries);
 }
 async function countryDetails(country) {
-const code = country.cca3;
-    const res = await fetch(`https://restcountries.com/v3.1/alpha/${code}?fields=name,flags,population,region,subregion,capital,cca3,borders,tld,currencies,languages,maps,timezones,fifa,latlng,idd,coatOfArms`);
-    const data = await res.json();
-    const fullData = Array.isArray(data) ? data[0] : data;
-    ETAT.currentCountry = fullData;
+  const code = country.cca3;
+  const res = await fetch(
+    `https://restcountries.com/v3.1/alpha/${code}?fields=name,flags,population,region,subregion,capital,cca3,borders,tld,currencies,languages,maps,timezones,fifa,latlng,idd,coatOfArms`,
+  );
+  const data = await res.json();
+  const fullData = Array.isArray(data) ? data[0] : data;
+  ETAT.currentCountry = fullData;
 
-//   ETAT.currentView = "detail";
-//   ETAT.currentCountry = country;
+  //   ETAT.currentView = "detail";
+  //   ETAT.currentCountry = country;
 
   // console.log("Showing details for: ", getCountryName(country));
 
-  provideCountryDetails(country);
+  provideCountryDetails(fullData);
 
   DOM.homeView.classList.add("hidden");
   DOM.detailView.classList.remove("hidden");
   window.scrollTo(0, 0);
 
-  
   window.history.pushState({ view: "detail", code: code }, "", `#${code}`);
 }
 
@@ -246,6 +245,14 @@ function provideCountryDetails(country) {
     ? Object.values(country.name.nativeName)[0].common
     : name;
 
+  const tld = country.tld?.join(", ") ?? "N/A";
+  const lat = country.latlng?.[0] ?? "N/A";
+  const lng = country.latlng?.[1] ?? "N/A";
+  const timezones = country.timezones?.join(", ") ?? "N/A";
+  const googleMap = country.maps?.googleMaps ?? "#";
+
+  const coat = country.coatOfArms?.png ?? null;
+
   DOM.countryDetails.innerHTML = `
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center animate-fade-up">
             <img src="${country.flags.svg || country.flag}" alt="Flag of ${name}" class="w-full rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
@@ -260,11 +267,17 @@ function provideCountryDetails(country) {
                         <p><strong class="font-semibold text-gray-900 dark:text-white">Region:</strong> ${country.region}</p>
                         <p><strong class="font-semibold text-gray-900 dark:text-white">Sub Region:</strong> ${country.subregion || "N/A"}</p>
                         <p><strong class="font-semibold text-gray-900 dark:text-white">Capital:</strong> ${capital}</p>
+                        <p><strong class="font-semibold text-gray-900 dark:text-white">Latitude:</strong> ${lat}</p>
+                        <p><strong class="font-semibold text-gray-900 dark:text-white">Longitude:</strong> ${lng}</p>
+
                     </div>
                     <div class="space-y-2">
-                        <p><strong class="font-semibold text-gray-900 dark:text-white">Top Level Domain:</strong> ${country.tld ? country.tld[0] : "N/A"}</p>
+                         <p><strong class="font-semibold text-gray-900 dark:text-white">Top Level Domain:</strong> ${tld}</p>
                         <p><strong class="font-semibold text-gray-900 dark:text-white">Currencies:</strong> ${currencies}</p>
                         <p><strong class="font-semibold text-gray-900 dark:text-white">Languages:</strong> ${languages}</p>
+                        <p><strong class="font-semibold text-gray-900 dark:text-white">Timezones:</strong> ${timezones}</p>
+                        <p><strong class="font-semibold text-gray-900 dark:text-white">Google Maps:</strong>
+                        <a href="${googleMap}" target="_blank" class="text-blue-600 dark:text-blue-400 underline">Open</a> </p>
                     </div>
                 </div>
 
@@ -274,7 +287,17 @@ function provideCountryDetails(country) {
                        ${provideBorderButtons(country.borders)} </div>
                 </div>
             </div>
-        </div>`;
+            ${
+              coat
+                ? ` <div class="pt-6"> <strong class="font-semibold text-gray-900 dark:text-white">
+                Coat of Arms: </strong>
+                <img src="${coat}" alt="Coat of arms of ${name}" class="w-40 mt-3">
+                </div>`
+                : ""
+            }
+        </div>
+        </div>
+    `;
 }
 function provideBorderButtons(borders) {
   if (!borders || borders.length === 0) {

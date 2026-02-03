@@ -1,112 +1,156 @@
 <!doctype html>
 <html lang="en" class="scroll-smooth">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Explore Countries</title>
     <meta name="description" content="Detailed information about Countries" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,600;9..144,800&family=DM+Sans:wght@400;500;700&display=swap" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,600;9..144,800&family=DM+Sans:wght@400;500;700&display=swap"
+    />
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    fontFamily: {
-                        display: ["Fraunces", "serif"],
-                        body: ["DM Sans", "sans-serif"],
-                    },
-                    colors: {
-                        brand: {
-                            DEFAULT: "#3B82F6",
-                            hover: "#2563EB",
-                        },
-                    },
-                    animation: {
-                        "spin-slow": "spin 20s linear infinite",
-                        "fade-up": "fadeInUp .6s ease-out forwards",
-                         "globe-spin": "spin 6s linear infinite"
-                    },
-                    keyframes: {
-                        fadeInUp: {
-                            "0%": {
-                                opacity: "0",
-                                transform: "translateY(20px)",
-                            },
-                            "100%": {
-                                opacity: "1",
-                                transform: "translateY(0)",
-                            },
-                        },
-                    },
-                },
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: {
+              display: ["Fraunces", "serif"],
+              body: ["DM Sans", "sans-serif"],
             },
-        };
+            colors: {
+              brand: {
+                DEFAULT: "#3B82F6",
+                hover: "#2563EB",
+              },
+            },
+            animation: {
+              "spin-slow": "spin 20s linear infinite",
+              "fade-up": "fadeInUp .6s ease-out forwards",
+              "globe-spin": "spin 6s linear infinite",
+            },
+            keyframes: {
+              fadeInUp: {
+                "0%": {
+                  opacity: "0",
+                  transform: "translateY(20px)",
+                },
+                "100%": {
+                  opacity: "1",
+                  transform: "translateY(0)",
+                },
+              },
+            },
+          },
+        },
+      };
     </script>
-</head>
+  </head>
 
-<body
-    class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-white font-body min-h-screen flex flex-col transition-colors duration-300">
-    <a href="#main-content"
-        class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-blue-600 focus:text-white">Skip
-        to main content</a>
+  <body
+    class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-white font-body min-h-screen flex flex-col transition-colors duration-300"
+  >
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-blue-600 focus:text-white"
+      >Skip to main content</a
+    >
     <header
-        class="sticky top-0 z-50 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 py-6 transition-all duration-300 shadow-sm">
-        <div class="max-w-[1280px] mx-auto px-4 sm:px-8">
-            <div class="flex justify-between items-center gap-4">
-                <h1 id="app-title"
-                    class="font-display text-2xl md:text-3xl font-black tracking-tight cursor-pointer flex items-center gap-3 select-none">
-                    <span class="text-3xl animate-spin-slow" aria-hidden="true">🌍</span>
-                    <span>Countries</span>
-                </h1>
-                <button id="theme-toggle"
-                    class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all bg-gray-100 text-gray-800 border border-gray-200 hover:bg-gray-200 dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:hover:bg-gray-600 active:scale-95 group">
-                    <span id="theme-icon" class="transition-transform group-hover:rotate-12" aria-hidden="true">🌑</span>
-                    <span id="theme-label" class="theme-label hidden sm:inline">Dark Mode</span>
-                </button>
-            </div>
+      class="sticky top-0 z-50 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 py-6 transition-all duration-300 shadow-sm"
+    >
+      <div class="max-w-[1280px] mx-auto px-4 sm:px-8">
+        <div class="flex justify-between items-center gap-4">
+          <h1
+            id="app-title"
+            class="font-display text-2xl md:text-3xl font-black tracking-tight cursor-pointer flex items-center gap-3 select-none"
+          >
+            <span class="text-3xl animate-spin-slow" aria-hidden="true"
+              >🌍</span
+            >
+            <span>Countries</span>
+          </h1>
+          <button
+            id="theme-toggle"
+            class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all bg-gray-100 text-gray-800 border border-gray-200 hover:bg-gray-200 dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:hover:bg-gray-600 active:scale-95 group"
+          >
+            <span
+              id="theme-icon"
+              class="transition-transform group-hover:rotate-12"
+              aria-hidden="true"
+              >🌑</span
+            >
+            <span id="theme-label" class="theme-label hidden sm:inline"
+              >Dark Mode</span
+            >
+          </button>
         </div>
+      </div>
     </header>
     <main id="main-content" class="flex-1 py-12 md:py-16">
-        <section id="home-view" class="animate-fade-up">
-            <div class="max-w-[1280px] mx-auto px-4 sm:px-8">
-                <div class="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 mb-16">
-                    <div class="relative flex items-center group">
-                        <svg class="absolute left-4 text-gray-400 group-focus-within:text-blue-500 transition-colors pointer-events-none"
-                            width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
-                            <path
-                                d="M12.5 11h-.79l-.28-.27A6.471 6.471 0 0 0 13 6.5 6.5 6.5 0 1 0 6.5 13c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L17.49 16l-4.99-5zm-6 0C4.01 11 2 8.99 2 6.5S4.01 2 6.5 2 11 4.01 11 6.5 8.99 11 6.5 11z"
-                                fill="currentColor" />
-                        </svg>
-                        <input type="search" id="search-input"
-                            class="w-full pl-14 pr-6 py-4 rounded-xl border-2 transition-all placeholder:text-gray-400 focus:outline-none focus:ring-4 bg-white border-gray-200 focus:border-blue-500 focus:ring-blue-500/10 dark:bg-gray-800 dark:border-gray-700 dark:placeholder:text-gray-500"
-                            placeholder="Search for a country..." aria-label="Search countries" />
-                    </div>
+      <section id="home-view" class="animate-fade-up">
+        <div class="max-w-[1280px] mx-auto px-4 sm:px-8">
+          <div class="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 mb-16">
+            <div class="relative flex items-center group">
+              <svg
+                class="absolute left-4 text-gray-400 group-focus-within:text-blue-500 transition-colors pointer-events-none"
+                width="18"
+                height="18"
+                viewBox="0 0 18 18"
+                aria-hidden="true"
+              >
+                <path
+                  d="M12.5 11h-.79l-.28-.27A6.471 6.471 0 0 0 13 6.5 6.5 6.5 0 1 0 6.5 13c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L17.49 16l-4.99-5zm-6 0C4.01 11 2 8.99 2 6.5S4.01 2 6.5 2 11 4.01 11 6.5 8.99 11 6.5 11z"
+                  fill="currentColor"
+                />
+              </svg>
+              <input
+                type="search"
+                id="search-input"
+                class="w-full pl-14 pr-6 py-4 rounded-xl border-2 transition-all placeholder:text-gray-400 focus:outline-none focus:ring-4 bg-white border-gray-200 focus:border-blue-500 focus:ring-blue-500/10 dark:bg-gray-800 dark:border-gray-700 dark:placeholder:text-gray-500"
+                placeholder="Search for a country..."
+                aria-label="Search countries"
+              />
+            </div>
 
-                    <div class="relative min-w-[220px]">
-                        <select id="region-filter"
-                            class="w-full pl-6 pr-12 py-4 rounded-xl border-2 appearance-none cursor-pointer font-medium focus:outline-none transition-all bg-white border-gray-200 focus:border-blue-500 text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
-                            aria-label="Filter by region">
-                            <option value="all">Filter by Region</option>
-                            <option value="Africa">Africa</option>
-                            <option value="all">All</option>
-                            <option value="Americas">Americas</option>
-                            <option value="Asia">Asia</option>
-                            <option value="Europe">Europe</option>
-                            <option value="Oceania">Oceania</option>
-                        </select>
-                        <svg class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400"
-                            width="12" height="8" viewBox="0 0 12 8" aria-hidden="true">
-                            <path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                        </svg>
-                    </div>
-                </div>
-                <div id="countries-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12"
-                    role="list">
-                    <!-- <div
+            <div class="relative min-w-[220px]">
+              <select
+                id="region-filter"
+                class="w-full pl-6 pr-12 py-4 rounded-xl border-2 appearance-none cursor-pointer font-medium focus:outline-none transition-all bg-white border-gray-200 focus:border-blue-500 text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+                aria-label="Filter by region"
+              >
+                <option value="all">Filter by Region</option>
+                <option value="Africa">Africa</option>
+                <option value="all">All</option>
+                <option value="Americas">Americas</option>
+                <option value="Asia">Asia</option>
+                <option value="Europe">Europe</option>
+                <option value="Oceania">Oceania</option>
+              </select>
+              <svg
+                class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400"
+                width="12"
+                height="8"
+                viewBox="0 0 12 8"
+                aria-hidden="true"
+              >
+                <path
+                  d="M1 1l5 5 5-5"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </div>
+          </div>
+          <div
+            id="countries-grid"
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12"
+            role="list"
+          >
+            <!-- <div
               class="col-span-full flex flex-col items-center gap-4 py-24 text-gray-500 dark:text-gray-400"
             >
               <div
@@ -115,39 +159,75 @@
               <p class="font-medium">Loading world data...</p>
             </div> -->
 
-                    <div class="col-span-full flex flex-col items-center gap-4 py-24 text-gray-500 dark:text-gray-400">
-                        <svg class="w-16 h-16 animate-[spin_6s_linear_infinite]" viewBox="0 0 100 100" fill="none"
-                            stroke="currentColor">
-                            <circle cx="50" cy="50" r="45" stroke-width="4" />
-                            <ellipse cx="50" cy="50" rx="45" ry="20" stroke-width="2" />
-                            <ellipse cx="50" cy="50" rx="20" ry="45" stroke-width="2" />
-                        </svg>
+            <div
+              class="col-span-full flex flex-col items-center gap-4 py-24 text-gray-500 dark:text-gray-400"
+            >
+              <svg
+                class="w-16 h-16 animate-[spin_6s_linear_infinite]"
+                viewBox="0 0 100 100"
+                fill="none"
+                stroke="currentColor"
+              >
+                <circle cx="50" cy="50" r="45" stroke-width="4" />
+                <ellipse cx="50" cy="50" rx="45" ry="20" stroke-width="2" />
+                <ellipse cx="50" cy="50" rx="20" ry="45" stroke-width="2" />
+              </svg>
 
-                        <p class="font-medium">Loading world data...</p>
-                    </div>
-                </div>
+              <p class="font-medium">Loading world data...</p>
             </div>
-        </section>
-        <section id="detail-view" class="hidden animate-fade-up" aria-labelledby="detail-title">
-            <div class="max-w-[1280px] mx-auto px-4 sm:px-8">
-                <button id="back-button" class="inline-flex items-center gap-3 px-8 py-3 rounded-xl font-medium transition-all shadow-sm hover:-translate-x-1 group mb-12 bg-white border border-gray-200 text-gray-800 hover:shadow-md dark:bg-gray-800 dark:border-gray-700 dark:text-white">
-                    <svg class="transition-transform group-hover:-translate-x-1" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
-                        <path d="M15 10H5M5 10L10 15M5 10L10 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    <span>Back</span>
-                </button>
-
-                <div id="country-details">
-                    </div>
-            </div>
-        </section>
-    </main>
-    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-12 mt-auto transition-colors duration-300">
-        <div class="max-w-[1280px] mx-auto px-8 text-center text-sm text-gray-500 dark:text-gray-400">
-            <p>Built with data from <a href="https://restcountries.com/" target="_blank" rel="noopener" class="text-blue-500 font-semibold hover:underline">REST Countries API</a></p>
+          </div>
         </div>
+      </section>
+      <section
+        id="detail-view"
+        class="hidden animate-fade-up"
+        aria-labelledby="detail-title"
+      >
+        <div class="max-w-[1280px] mx-auto px-4 sm:px-8">
+          <button
+            id="back-button"
+            class="inline-flex items-center gap-3 px-8 py-3 rounded-xl font-medium transition-all shadow-sm hover:-translate-x-1 group mb-12 bg-white border border-gray-200 text-gray-800 hover:shadow-md dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+          >
+            <svg
+              class="transition-transform group-hover:-translate-x-1"
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              aria-hidden="true"
+            >
+              <path
+                d="M15 10H5M5 10L10 15M5 10L10 5"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <span>Back</span>
+          </button>
+
+          <div id="country-details"></div>
+        </div>
+      </section>
+    </main>
+    <footer
+      class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-12 mt-auto transition-colors duration-300"
+    >
+      <div
+        class="max-w-[1280px] mx-auto px-8 text-center text-sm text-gray-500 dark:text-gray-400"
+      >
+        <p>
+          Built with data from
+          <a
+            href="https://restcountries.com/"
+            target="_blank"
+            rel="noopener"
+            class="text-blue-500 font-semibold hover:underline"
+            >REST Countries API</a
+          >
+        </p>
+      </div>
     </footer>
     <script src="script.js"></script>
-</body>
-
+  </body>
 </html>
