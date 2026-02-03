@@ -11,7 +11,7 @@ const DOM = {
 };
 
 const _ = {
-  URL: "https://restcountries.com/v3.1/all?fields=name,flags,population,region,capital",
+  URL: "https://restcountries.com/v3.1/all?fields=name,flags,population,region,capital,cca3,borders,tld,currencies,languages",
   DELAY: 300,
   DELAY_INCREMENT: 50,
   MAX_DELAY: 1000,
@@ -41,74 +41,87 @@ const ETAT = {
   currentCountry: null,
 };
 
-function initTheme(){
-    const savedTheme = localStorage.getItem('theme');
-    const darkTheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
+function initTheme() {
+  const savedTheme = localStorage.getItem("theme");
+  const darkTheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
-    if (savedTheme === 'dark' || (!savedTheme && darkTheme)){
-        document.documentElement.classList.add('dark');
+  if (savedTheme === "dark" || (!savedTheme && darkTheme)) {
+    document.documentElement.classList.add("dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+  }
+}
+
+function eventListen() {
+  DOM.themeToggle.addEventListener("click", () => {
+    if (document.documentElement.classList.contains("dark")) {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
     } else {
-        document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
     }
-}
+  });
 
-function eventListen(){
-    DOM.themeToggle.addEventListener('click', () => {
-        if (document.documentElement.classList.contains('dark')){
-            document.documentElement.classList.remove('dark');
-            localStorage.setItem('theme', 'light');
-        } else {
-            document.documentElement.classList.add('dark');
-            localStorage.setItem('theme', 'dark');
+  let timeout;
+  DOM.searchInput.addEventListener("input", () => {
+    clearTimeout(timeout);
+    timeout = setTimeout(filterCountries, _.DELAY);
+  });
+  DOM.regionFilter.addEventListener("change", filterCountries);
 
-        }
-    });
-
-    let timeout;
-    DOM.searchInput.addEventListener('input', () =>{
-        clearTimeout(timeout);
-        timeout = setTimeout(filterCountries, _.DELAY);
-    });
-    DOM.regionFilter.addEventListener('change', filterCountries);
-}
-
-async function fetchCountry(){
-    try {
-        const response = await fetch(_.URL);
-        if(!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        const donnee = await response.json();
-
-        ETAT.countries = donnee.sort((x, y) => 
-        getCountryName(x).localeCompare(getCountryName(y)));
-        ETAT.specificCountries = ETAT.countries;
-        provideCountries(ETAT.specificCountries);
-
-        console.log('Countries loaded', ETAT.countries.length);
-
-    } catch (err){
-        DOM.countriesGrid.innerHTML = `<p class = "col-span-full py-12 text-center text-red-500 font-medium"> Error: ${err.message}</p>`;
+  DOM.countryDetails.addEventListener("click", (evnt) => {
+    const borderBtn = evnt.target.closest(".border-button");
+    if (borderBtn) {
+      const code = borderBtn.dataset.code;
+      const country = ETAT.countries.find((c) => c.cca3 === code);
+      if (country) countryDetails(country);
     }
+  });
+
+  DOM.backButton.addEventListener('click', () => {
+    window.history.pushState({view: 'home'}, '', '#');
+    homeViews();
+  })
 }
 
-function createCountryCard(country, i){
-    const card = document.createElement('article');
-    const name = getCountryName(country);
-    const capital = Array.isArray(country.capital)? 
-    country.capital.join(', ')
-    : (country.capital || 'N/A');
+async function fetchCountry() {
+  try {
+    const response = await fetch(_.URL);
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    const donnee = await response.json();
 
-    card.className = `group rounded-lg overflow-hidden cursor-pointer shadow-sm transition-all duration-300
+    ETAT.countries = donnee.sort((x, y) =>
+      getCountryName(x).localeCompare(getCountryName(y)),
+    );
+    ETAT.specificCountries = ETAT.countries;
+    provideCountries(ETAT.specificCountries);
+
+    console.log("Countries loaded", ETAT.countries.length);
+  } catch (err) {
+    DOM.countriesGrid.innerHTML = `<p class = "col-span-full py-12 text-center text-red-500 font-medium"> Error: ${err.message}</p>`;
+  }
+}
+
+function createCountryCard(country, i) {
+  const card = document.createElement("article");
+  const name = getCountryName(country);
+  const capital = Array.isArray(country.capital)
+    ? country.capital.join(", ")
+    : country.capital || "N/A";
+
+  card.className = `group rounded-lg overflow-hidden cursor-pointer shadow-sm transition-all duration-300
         bg-white border border-gray-200 
         dark:bg-gray-800 dark:border-gray-700 
         hover:-translate-y-2 hover:shadow-xl hover:border-blue-400 dark:hover:border-blue-500
         animate-fade-up`;
 
-    card.style.animationDelay =`
-    ${Math.min(i*_.DELAY_INCREMENT, _.MAX_DELAY)}
+  card.style.animationDelay = `
+    ${Math.min(i * _.DELAY_INCREMENT, _.MAX_DELAY)}
     ms
     `;
 
-    card.innerHTML = `
+  card.innerHTML = `
         <div class="h-40 overflow-hidden border-b border-gray-200 dark:border-gray-700">
             <img data-src="${country.flags.svg || country.flag}" alt="Flag of ${name}" class="lazy w-full h-full object-cover opacity-0 transition-opacity duration-500">
         </div>
@@ -119,77 +132,85 @@ function createCountryCard(country, i){
             <p><strong class="font-semibold text-gray-900 dark:text-white">Capital:</strong> ${capital}</p>
         </div>`;
 
-        card.addEventListener('click', () => countryDetails(country));
-        return card;
+  card.addEventListener("click", () => countryDetails(country));
+  return card;
 }
 
-function provideCountries(countries){
-    DOM.countriesGrid.innerHTML = '';
+function provideCountries(countries) {
+  DOM.countriesGrid.innerHTML = "";
 
-    if (countries.length === 0){
-        DOM.countriesGrid.innerHTML = 
-        `
+  if (countries.length === 0) {
+    DOM.countriesGrid.innerHTML = `
         <div class ="col-span-full py-24 text-center"> 
         <p class="text-xl font-medium text-gray-500 dark: text-gray-400">No match to your search</p>
         </div>
-        `
-        return;
-    }
-    const fragment = document.createDocumentFragment();
-    countries.forEach((country, i)=> {
-        const card = createCountryCard(country, i);
-        fragment.appendChild(card);
-    });
-    DOM.countriesGrid.appendChild(fragment);
+        `;
+    return;
+  }
+  const fragment = document.createDocumentFragment();
+  countries.forEach((country, i) => {
+    const card = createCountryCard(country, i);
+    fragment.appendChild(card);
+  });
+  DOM.countriesGrid.appendChild(fragment);
 
-    document.querySelectorAll('.lazy').forEach(img => imageControl.observe(img));
+  document
+    .querySelectorAll(".lazy")
+    .forEach((img) => imageControl.observe(img));
 }
 
 function filterCountries() {
-    const searching = DOM.searchInput.value.toLowerCase().trim();
-    const regions = DOM.regionFilter.value;
-    ETAT.specificCountries = ETAT.countries.filter(country => {
-        const searchingMatch = getCountryName(country).toLowerCase().includes(searching);
-        const regionMatch = regions === 'all' || country.region === regions;
-        return searchingMatch && regionMatch;
-    });
-    provideCountries(ETAT.specificCountries);
+  const searching = DOM.searchInput.value.toLowerCase().trim();
+  const regions = DOM.regionFilter.value;
+  ETAT.specificCountries = ETAT.countries.filter((country) => {
+    const searchingMatch = getCountryName(country)
+      .toLowerCase()
+      .includes(searching);
+    const regionMatch = regions === "all" || country.region === regions;
+    return searchingMatch && regionMatch;
+  });
+  provideCountries(ETAT.specificCountries);
 }
-function countryDetails(country){
-    ETAT.currentView = 'detail';
-    ETAT.currentCountry = country;
+function countryDetails(country) {
+  ETAT.currentView = "detail";
+  ETAT.currentCountry = country;
 
-    // console.log("Showing details for: ", getCountryName(country));
+  // console.log("Showing details for: ", getCountryName(country));
 
-    provideCountryDetails(country);
+  provideCountryDetails(country);
 
-    DOM.homeView.classList.add('hidden');
-    DOM.detailView.classList.remove('hidden');
-    window.scrollTo(0, 0);
+  DOM.homeView.classList.add("hidden");
+  DOM.detailView.classList.remove("hidden");
+  window.scrollTo(0, 0);
+
+  const code = country.cca3;
+  window.history.pushState({view: 'detail', code: code}, '', `#${code}`);
 }
 
 function homeViews() {
-    ETAT.currentView = 'home';
-    ETAT.currentCountry = null;
-    DOM.homeView.classList.remove('hidden');
+  ETAT.currentView = "home";
+  ETAT.currentCountry = null;
+  DOM.homeView.classList.remove("hidden");
 }
 
-function provideCountryDetails (country){
-    const name = getCountryName(country);
-    const currencies = country.currencies
+function provideCountryDetails(country) {
+  const name = getCountryName(country);
+  const currencies = country.currencies
     ? Object.values(country.currencies)
-    .map(COUNTRY => COUNTRY.name).join(', ')
-    : 'N/A';
-    const capital = Array.isArray(country.capital) ?
-    country.capital.join(', ') :
-    (country.capital || 'N/A');
-    const languages = country.languages ?
-    Object.values(country.languages).join(', '): 'N/A';
-    const nativeName = country.name.nativeName 
+        .map((COUNTRY) => COUNTRY.name)
+        .join(", ")
+    : "N/A";
+  const capital = Array.isArray(country.capital)
+    ? country.capital.join(", ")
+    : country.capital || "N/A";
+  const languages = country.languages
+    ? Object.values(country.languages).join(", ")
+    : "N/A";
+  const nativeName = country.name.nativeName
     ? Object.values(country.name.nativeName)[0].common
     : name;
 
-    DOM.countryDetails.innerHTML = `
+  DOM.countryDetails.innerHTML = `
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center animate-fade-up">
             <img src="${country.flags.svg || country.flag}" alt="Flag of ${name}" class="w-full rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
             
@@ -201,11 +222,11 @@ function provideCountryDetails (country){
                         <p><strong class="font-semibold text-gray-900 dark:text-white">Native Name:</strong> ${nativeName}</p>
                         <p><strong class="font-semibold text-gray-900 dark:text-white">Population:</strong> ${country.population.toLocaleString()}</p>
                         <p><strong class="font-semibold text-gray-900 dark:text-white">Region:</strong> ${country.region}</p>
-                        <p><strong class="font-semibold text-gray-900 dark:text-white">Sub Region:</strong> ${country.subregion || 'N/A'}</p>
+                        <p><strong class="font-semibold text-gray-900 dark:text-white">Sub Region:</strong> ${country.subregion || "N/A"}</p>
                         <p><strong class="font-semibold text-gray-900 dark:text-white">Capital:</strong> ${capital}</p>
                     </div>
                     <div class="space-y-2">
-                        <p><strong class="font-semibold text-gray-900 dark:text-white">Top Level Domain:</strong> ${country.tld ? country.tld[0] : 'N/A'}</p>
+                        <p><strong class="font-semibold text-gray-900 dark:text-white">Top Level Domain:</strong> ${country.tld ? country.tld[0] : "N/A"}</p>
                         <p><strong class="font-semibold text-gray-900 dark:text-white">Currencies:</strong> ${currencies}</p>
                         <p><strong class="font-semibold text-gray-900 dark:text-white">Languages:</strong> ${languages}</p>
                     </div>
@@ -219,26 +240,38 @@ function provideCountryDetails (country){
             </div>
         </div>`;
 }
-function provideBorderButtons(borders){
-    if (!borders || borders.length === 0) return 
-    '<span class="text-gray-400 italic"> No shared borders </span>';
-    return borders.map( d => {
-        const borderCountry = ETAT.countries.
-        find(c => (d.cca3 === d || d.alpha3Code === d));
-        const label = borderCountry ? getCountryName(borderCountry)
-        : d;
+function provideBorderButtons(borders) {
+  if (!borders || borders.length === 0) {
+    return `<span class="text-gray-400 italic"> No shared borders </span>`;
+  }
+  return borders
+    .map((code) => {
+      const neighbor = ETAT.countries.find((c) => c.cca3 === code);
+      const label = neighbor ? getCountryName(neighbor) : code;
 
-        return borderCountry ?
-        `<button class="border-button px-4 py-1.5 text-xs rounded shadow-sm transition-all
+      return neighbor
+        ? `<button class="border-button px-4 py-1.5 text-xs rounded shadow-sm transition-all
                  bg-white border border-gray-200 text-gray-700
                  hover:-translate-y-0.5 hover:shadow-md hover:bg-gray-50
                  dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700" 
-                 data-code="${d}">${label}</button>`
-                 : '';
-
-    }).join(' ');
+                 data-code="${code}">${label}</button>`
+        : "";
+    })
+    .join(" ");
 }
 
- initTheme();
- eventListen();
- fetchCountry();
+function popState(evnt){
+    if (evnt.state?.view === 'detail'){
+        const country = ETAT.countries.find(c => c.cca3 === evnt.state.code);
+        if (country){
+            countryDetails(country);
+        }
+    } else {
+        homeViews();
+    }
+}
+
+initTheme();
+eventListen();
+fetchCountry();
+window.addEventListener('popstate', popState);
