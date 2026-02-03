@@ -83,7 +83,16 @@ function eventListen() {
   DOM.backButton.addEventListener('click', () => {
     window.history.pushState({view: 'home'}, '', '#');
     homeViews();
-  })
+  });
+
+  DOM.appTitle.addEventListener('click', () => {
+    DOM.searchInput.value = '';
+    DOM.regionFilter.value = 'all';
+    ETAT.filterCountries = ETAT.countries;
+    provideCountries(ETAT.specificCountries);
+    window.history.pushState({view: 'home'}, '','#/')
+    homeViews();
+  }):
 }
 
 async function fetchCountry() {
@@ -97,6 +106,14 @@ async function fetchCountry() {
     );
     ETAT.specificCountries = ETAT.countries;
     provideCountries(ETAT.specificCountries);
+
+    const hash = window.location.hash.slice(1);
+    if (hash) {
+        const country = ETAT.countries.find( c => c.cca3 === hash);
+        if (country){
+            countryDetails(country);
+        }
+    }
 
     console.log("Countries loaded", ETAT.countries.length);
   } catch (err) {
