@@ -107,7 +107,8 @@ function eventListen() {
 
 async function fetchCountry() {
   try {
-    const response = await fetch(_.URL);
+    // const response = await fetch(_.URL);      
+    const response = await fetch("https://restcountries.com/v3.1/all?fields=name,flags,population,region,capital,cca3,borders,subregion,currencies,languages")
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const donnee = await response.json();
 
