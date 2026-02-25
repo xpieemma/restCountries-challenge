@@ -1,5 +1,4 @@
-# Live demo
-https://xpieemma.github.io/restCountries-challenge/
+# [Live demo](https://xpieemma.github.io/restCountries-challenge/)
 
 # Frontend Mentor - REST Countries API with Color Theme Switcher
 This is a solution to the REST Countries API with color theme switcher challenge on Frontend Mentor. This project involves fetching data from the REST Countries API to display country information, implementing search and filter functionality, and providing a seamless dark mode experience.
