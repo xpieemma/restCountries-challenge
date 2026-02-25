@@ -40,7 +40,7 @@ Users should be able to:
 
 
 
-## Live Site URL:(https://xpieemma.github.io/restCountries-challen)]
+## [Live Site](https://xpieemma.github.io/restCountries-challenge/)
 
 # My Process
 ## Built With
